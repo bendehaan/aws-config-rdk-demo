@@ -51,6 +51,11 @@ class ComplianceTest(unittest.TestCase):
 
     rule_parameters = '{"SomeParameterKey":"SomeParameterValue","SomeParameterKey2":"SomeParameterValue2"}'
 
+    invoking_event_security_group_sample_2 = """
+        {"configurationItemDiff":null,"configurationItem":{"relatedEvents":[],"relationships":[{"resourceId":"vpc-0d0379429b7d37894","resourceName":null,"resourceType":"AWS::EC2::VPC","name":"Is contained in Vpc"}],"configuration":{"description":"default VPC security group","groupName":"default","ipPermissions":[{"ipProtocol":"-1","ipv6Ranges":[],"prefixListIds":[],"userIdGroupPairs":[{"groupId":"sg-03a20729472030982","userId":"071766696174"}],"ipv4Ranges":[],"ipRanges":[]}],"ownerId":"071766696174","groupId":"sg-03a20729472030982","ipPermissionsEgress":[{"ipProtocol":"-1","ipv6Ranges":[],"prefixListIds":[],"userIdGroupPairs":[],"ipv4Ranges":[{"cidrIp":"0.0.0.0/0"}],"ipRanges":["0.0.0.0/0"]}],"tags":[],"vpcId":"vpc-0d0379429b7d37894"},"supplementaryConfiguration":{},"tags":{},"configurationItemVersion":"1.3","configurationItemCaptureTime":"2020-02-07T14:02:55.345Z","configurationStateId":1581084175345,"awsAccountId":"071766696174","configurationItemStatus":"ResourceDiscovered","resourceType":"AWS::EC2::SecurityGroup","resourceId":"sg-03a20729472030982","resourceName":"default","ARN":"arn:aws:ec2:eu-west-1:071766696174:security-group/sg-03a20729472030982","awsRegion":"eu-west-1","availabilityZone":"Not Applicable","configurationStateMd5Hash":"","resourceCreationTime":null},"notificationCreationTime":"2020-02-07T14:39:51.465Z","messageType":"ConfigurationItemChangeNotification","recordVersion":"1.3"}
+
+    """
+
     invoking_event_security_group_sample = """
     {
 
@@ -125,6 +130,15 @@ class ComplianceTest(unittest.TestCase):
         resp_expected = []
         resp_expected.append(build_expected_response(
             'NON_COMPLIANT', 'sg-1d56fc66', 'AWS::EC2::SecurityGroup'))
+        assert_successful_evaluation(self, response, resp_expected)
+
+    def test_sample_3(self):
+        RULE.ASSUME_ROLE_MODE = False
+        response = RULE.lambda_handler(build_lambda_configurationchange_event(
+            self.invoking_event_security_group_sample_2, self.rule_parameters), {})
+        resp_expected = []
+        resp_expected.append(build_expected_response(
+            'NON_COMPLIANT', 'sg-03a20729472030982', 'AWS::EC2::SecurityGroup'))
         assert_successful_evaluation(self, response, resp_expected)
 
 ####################

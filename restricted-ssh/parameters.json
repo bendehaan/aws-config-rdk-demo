@@ -1,0 +1,12 @@
+{
+  "Version": "1.0",
+  "Parameters": {
+    "RuleName": "restricted-ssh",
+    "SourceRuntime": "python3.7",
+    "CodeKey": "restricted-ssh.zip",
+    "InputParameters": "{}",
+    "OptionalParameters": "{}",
+    "SourceEvents": "AWS::EC2::SecurityGroup"
+  },
+  "Tags": "[]"
+}

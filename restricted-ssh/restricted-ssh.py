@@ -67,7 +67,7 @@ def evaluate_compliance(event, configuration_item, valid_rule_parameters):
         from_port = sg_rule.get('fromPort')
         to_port = sg_rule.get('toPort')
         for ip_range in sg_rule.get('ipRanges'):
-            if ip_range == "0.0.0.0/0" and ((from_port != 80 and to_port != 80) and (from_port != 443 and to_port != 443)):
+            if ip_range == "0.0.0.0/0" and ((from_port != 80 or to_port != 80) and (from_port != 443 or to_port != 443)):
                 status = 'NON_COMPLIANT'
 
     return status
